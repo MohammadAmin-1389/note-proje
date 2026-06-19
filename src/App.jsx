@@ -34,7 +34,19 @@ function App() {
       isPinned: false,
     },
   ]);
-  let [selectedNotes, setselectedNotes] = useState([0]);
+  let [selectedNotes, setselectedNotes] = useState(null);
+  let addNote = () => {
+    let newNote = {
+      id: Date.now(),
+      title: "یادداشت جدید",
+      snippet: "متن یادداشت را اینجا بنویسید...",
+      category: "عمومی",
+      date: new Date().toLocaleDateString("fa-IR"),
+    };
+    setnotes([newNote, ...notes]);
+    setselectedNotes(newNote);
+  };
+
   let deleteNote = (id) => {
     let newNotes = notes.filter((singleNote) => singleNote.id !== id);
     setnotes(newNotes);
@@ -46,24 +58,26 @@ function App() {
       }
     }
   };
+
   let updeteNote = (updatedNote) => {
     let newNote = notes.map((singleNote) =>
       singleNote.id === updatedNote.id ? updatedNote : singleNote,
     );
-    setnotes(() => newNote);
+    setnotes(newNote);
   };
-  return (
-    <div className="flex w-20%  h-screen ">
-      <Sidebar />
-      <div className="flex flex-col w-screen  flex-1">
-        <Search />
 
+  return (
+    <div className="flex w-20% h-screen">
+      <Sidebar />
+      <div className="flex flex-col w-screen flex-1">
+        <Search />
         <div className="flex flex-1 overflow-hidden gap-2.5 w-[88vw] p-2.5">
           <Notelist
             notes={notes}
             onselect={setselectedNotes}
             selectednotes={selectedNotes}
             onDelete={deleteNote}
+            onAdd={addNote} 
           />
           <NoteEditor
             notes={selectedNotes}
