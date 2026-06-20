@@ -1,39 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NoteEditor from "./components/NoteEditore/NoteEditore";
 import Notelist from "./components/Notelist/Notelist";
 import Search from "./components/Search/Search";
 import Sidebar from "./components/Sidebar/Sidebar";
 
 function App() {
-  let [notes, setnotes] = useState([
-    {
-      id: 1,
-      title: "ایده پروژه",
-      snippet: "ساخت یک اپ مدیریت یادداشت با ReactوTailwind",
-      content: "متن کامل یادداشت...",
-      category: "ایده",
-      date: "1403/09/12",
-      isPinned: true,
-    },
-    {
-      id: 2,
-      title: "مطالب کلاس",
-      snippet: "اموزی props,state,React",
-      content: "جزئیات یادداشت...",
-      category: "آموزش",
-      date: "1403/09/10",
-      isPinned: false,
-    },
-    {
-      id: 3,
-      title: "لیست",
-      snippet: "اماده سازی تمرین برای دانشجو ها",
-      content: "جزئیات یادداشت...",
-      category: "کار",
-      date: "1403/09/9",
-      isPinned: false,
-    },
-  ]);
+  let [notes, setnotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || [],
+  );
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
+
+  let [search, setsearch] = useState("");
+  let filterNotes = notes.filter((notes) =>
+    notes.title.toLowerCase().includes(search.toLowerCase()),
+  );
   let [selectedNotes, setselectedNotes] = useState(null);
   let addNote = () => {
     let newNote = {
@@ -70,14 +53,14 @@ function App() {
     <div className="flex w-20% h-screen">
       <Sidebar />
       <div className="flex flex-col w-screen flex-1">
-        <Search />
+        <Search search={search} setsearch={setsearch} />
         <div className="flex flex-1 overflow-hidden gap-2.5 w-[88vw] p-2.5">
           <Notelist
-            notes={notes}
+            notes={filterNotes}
             onselect={setselectedNotes}
             selectednotes={selectedNotes}
             onDelete={deleteNote}
-            onAdd={addNote} 
+            onAdd={addNote}
           />
           <NoteEditor
             notes={selectedNotes}

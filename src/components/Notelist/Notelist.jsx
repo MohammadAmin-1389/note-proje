@@ -7,7 +7,7 @@ function Notelist({ notes, onselect, selectednotes, onAdd }) {
         <div className="flex justify-between">
           <h3>یادداشت ها</h3>
           <button
-          onAdd={onAdd}
+            onClick={onAdd}
             className="bg-blue-800 text-[15px] rounded-xl w-16 h-8 text-white hover:bg-blue-900 transition-all"
           >
             جدید+
