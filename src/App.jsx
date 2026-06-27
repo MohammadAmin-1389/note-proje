@@ -14,6 +14,7 @@ function App() {
   }, [notes]);
 
   let [search, setsearch] = useState("");
+  let [isDark, setIsDark] = useState(false);
   let filterNotes = notes.filter((notes) =>
     notes.title.toLowerCase().includes(search.toLowerCase()),
   );
@@ -50,10 +51,19 @@ function App() {
   };
 
   return (
-    <div className="flex w-20% h-screen">
-      <Sidebar />
+    <div
+      className={`flex w-20% h-screen transition-colors duration-500 ${
+        isDark ? "bg-[#0a0f08]" : ""
+      }`}
+    >
+      <Sidebar isDark={isDark} />
       <div className="flex flex-col w-screen flex-1">
-        <Search search={search} setsearch={setsearch} />
+        <Search
+          search={search}
+          setsearch={setsearch}
+          isDark={isDark}
+          setIsDark={setIsDark}
+        />
         <div className="flex flex-1 overflow-hidden gap-2.5 w-[88vw] p-2.5">
           <Notelist
             notes={filterNotes}
@@ -61,12 +71,14 @@ function App() {
             selectednotes={selectedNotes}
             onDelete={deleteNote}
             onAdd={addNote}
+            isDark={isDark}
           />
           <NoteEditor
             notes={selectedNotes}
             key={selectedNotes?.id}
             onSave={updeteNote}
             onDelete={deleteNote}
+            isDark={isDark}
           />
         </div>
       </div>
